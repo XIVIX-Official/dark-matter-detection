@@ -287,7 +287,7 @@ SIGNIFICANCE_THRESHOLD = 3.0
 - Statistical analysis: O(n log n)
 - Visualization rendering: <50ms on modern browsers
 
-## 🐛 Troubleshooting
+## ⚙️ Troubleshooting
 
 **Frontend won't connect to backend**
 - Ensure Flask server running on localhost:5000
@@ -318,7 +318,7 @@ Contributions welcome! Please:
 
 This project is licensed under the MIT License - see LICENSE file for details.
 
-## 🙏 Acknowledgments
+## ✔️ Acknowledgments
 
 - Physics models based on peer-reviewed literature
 - UI inspired by modern data visualization dashboards
@@ -329,9 +329,9 @@ This project is licensed under the MIT License - see LICENSE file for details.
 For issues, questions, or suggestions:
 - Open an GitHub Issue
 - Submit Pull Request with improvements
-- Contact: xivix@example.com
+- Contact: info@codexustechnologies.com
 
-## 🔮 Future Enhancements
+## 🛠️ Future Enhancements
 
 - [ ] 3D particle trajectory visualization
 - [ ] Multi-detector comparison
@@ -344,6 +344,6 @@ For issues, questions, or suggestions:
 
 ---
 
-**Made with ❤️ by XIVIX Contributors**
+**Powered by XIVIX**
 
 *Advancing dark matter detection through simulation and visualization*
