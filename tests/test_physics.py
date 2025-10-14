@@ -1,153 +1,95 @@
+"""
+Tests for physics module.
+"""
 import pytest
 import numpy as np
-import sys
-import os
+from src.physics import (
+    maxwell_boltzmann_velocity,
+    calculate_nuclear_form_factor,
+    calculate_recoil_energy,
+    calculate_cross_section,
+    generate_background,
+    apply_detector_response
+)
+from src.particle import WIMP, Nucleus
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-
-from src.physics import PhysicsEngine
-from src.particle import ParticleType
-
-
-class TestPhysicsEngine:
-    """Test Physics Engine calculations"""
+def test_maxwell_boltzmann_velocity():
+    """Test Maxwell-Boltzmann velocity distribution."""
+    v = maxwell_boltzmann_velocity()
+    assert isinstance(v, np.ndarray)
+    assert len(v) == 3
+    assert np.all(np.isfinite(v))
     
-    def test_engine_initialization(self):
-        """Test physics engine creation"""
-        engine = PhysicsEngine()
-        assert engine.interaction_count == 0
-        assert engine.total_energy_deposited == 0.0
-        assert engine.WIMP_MASS == 50.0
-        
-    def test_interaction_probability(self):
-        """Test WIMP interaction probability calculation"""
-        engine = PhysicsEngine()
-        
-        # Test at various velocities
-        prob_low = engine.calculate_interaction_probability(100e3)
-        prob_high = engine.calculate_interaction_probability(300e3)
-        
-        assert 0 <= prob_low <= 1.0
-        assert 0 <= prob_high <= 1.0
-        # Higher velocity should give lower probability
-        assert prob_low >= prob_high
-        
-    def test_nuclear_recoil_energy(self):
-        """Test nuclear recoil energy calculation"""
-        engine = PhysicsEngine()
-        
-        recoil = engine.nuclear_recoil_energy(
-            wimp_mass=50.0,
-            nucleus_mass=20.0,
-            wimp_velocity=200e3
-        )
-        
-        assert recoil >= 0
-        assert isinstance(recoil, float)
-        
-    def test_quenching_factor_dark_matter(self):
-        """Test quenching factor for dark matter"""
-        engine = PhysicsEngine()
-        
-        quench = engine.quenching_factor(50.0, ParticleType.DARK_MATTER)
-        assert 0 <= quench <= 1.0
-        
-    def test_quenching_factor_background(self):
-        """Test quenching factor for background"""
-        engine = PhysicsEngine()
-        
-        quench = engine.quenching_factor(50.0, ParticleType.BACKGROUND)
-        assert quench == 1.0
-        
-    def test_scattering_angle(self):
-        """Test random scattering angle generation"""
-        engine = PhysicsEngine()
-        
-        # Generate multiple angles
-        for _ in range(100):
-            angle = engine.scattering_angle()
-            assert 0 <= angle <= np.pi
-            
-    def test_ionization_tracks(self):
-        """Test ionization track estimation"""
-        engine = PhysicsEngine()
-        
-        tracks_low = engine.ionization_tracks(energy_deposited=10.0)
-        tracks_high = engine.ionization_tracks(energy_deposited=100.0)
-        
-        assert tracks_low > 0
-        assert tracks_high > tracks_low
-        assert isinstance(tracks_low, int)
-        
-    def test_electron_recoil_equivalent(self):
-        """Test electron recoil equivalent calculation"""
-        engine = PhysicsEngine()
-        
-        ere = engine.electron_recoil_equivalent(100.0, 0.5)
-        assert ere == pytest.approx(50.0)
-        
-    def test_detector_efficiency_below_threshold(self):
-        """Test detector efficiency below threshold"""
-        engine = PhysicsEngine()
-        
-        eff = engine.detector_efficiency(1.0)
-        assert eff == 0.0
-        
-    def test_detector_efficiency_above_threshold(self):
-        """Test detector efficiency above threshold"""
-        engine = PhysicsEngine()
-        
-        eff_mid = engine.detector_efficiency(5.0)
-        eff_high = engine.detector_efficiency(100.0)
-        
-        assert 0 < eff_mid < 1.0
-        assert eff_high > eff_mid
-        
-    def test_background_rate(self):
-        """Test background rate calculation"""
-        engine = PhysicsEngine()
-        
-        rate = engine.background_rate(energy=10.0, detector_mass_kg=1.0)
-        assert rate > 0
-        
-        # More massive detector should have higher rate
-        rate_heavy = engine.background_rate(energy=10.0, detector_mass_kg=10.0)
-        assert rate_heavy > rate
-        
-    def test_statistical_significance(self):
-        """Test significance calculation"""
-        engine = PhysicsEngine()
-        
-        sig1 = engine.statistical_significance(signal_events=100, background_events=10)
-        sig2 = engine.statistical_significance(signal_events=10, background_events=100)
-        sig3 = engine.statistical_significance(signal_events=0, background_events=100)
-        
-        assert sig1 > sig2
-        assert sig3 == 0
-        assert sig1 > 0
-        
-    def test_statistical_significance_zero_background(self):
-        """Test significance with zero background"""
-        engine = PhysicsEngine()
-        
-        sig = engine.statistical_significance(signal_events=10, background_events=0)
-        assert sig == float('inf')
-        
-    def test_interaction_cascade(self):
-        """Test interaction cascade simulation"""
-        engine = PhysicsEngine()
-        
-        cascade = engine.simulate_interaction_cascade(initial_energy=50.0)
-        
-        assert 'primary_recoil' in cascade
-        assert 'secondary_ionizations' in cascade
-        assert 'photon_production' in cascade
-        assert 'heat_generated' in cascade
-        
-        assert cascade['primary_recoil'] == 50.0
-        assert cascade['secondary_ionizations'] > 0
-        assert cascade['heat_generated'] > 0
+    # Test velocity magnitude is reasonable
+    v_mag = np.sqrt(np.sum(v**2))
+    assert 0 < v_mag < 544e3  # Below escape velocity
 
+def test_nuclear_form_factor():
+    """Test nuclear form factor calculation."""
+    q = 1.0  # fm^-1
+    A = 131  # Xenon
+    F = calculate_nuclear_form_factor(q, A)
+    assert isinstance(F, float)
+    assert 0 <= F <= 1  # Form factor should be between 0 and 1
 
-if __name__ == '__main__':
-    pytest.main([__file__, '-v'])
+def test_recoil_energy():
+    """Test recoil energy calculation."""
+    wimp = WIMP(
+        mass=50.0,
+        energy=0.0,
+        position=np.zeros(3),
+        velocity=np.array([220e3, 0, 0]),
+        cross_section=1e-45
+    )
+    
+    nucleus = Nucleus(
+        mass=131.0,
+        energy=0.0,
+        position=np.zeros(3),
+        velocity=np.zeros(3),
+        atomic_number=54,
+        atomic_mass=131
+    )
+    
+    E_r = calculate_recoil_energy(wimp, nucleus, np.pi/2)
+    assert isinstance(E_r, float)
+    assert E_r >= 0  # Recoil energy should be positive
+
+def test_cross_section():
+    """Test cross section calculation."""
+    E_r = 10.0  # keV
+    A = 131    # Xenon
+    sigma_0 = 1e-45  # cm²
+    
+    sigma = calculate_cross_section(E_r, A, sigma_0)
+    assert isinstance(sigma, float)
+    assert sigma > 0  # Cross section should be positive
+
+def test_background_generation():
+    """Test background event generation."""
+    energy_range = (0, 100)  # keV
+    rate = 0.01  # events/kg/day
+    exposure_time = 365  # days
+    
+    energies = generate_background(energy_range, rate, exposure_time)
+    assert isinstance(energies, np.ndarray)
+    assert np.all(energies >= energy_range[0])
+    assert np.all(energies <= energy_range[1])
+
+def test_detector_response():
+    """Test detector response function."""
+    energy = 10.0  # keV
+    resolution = 0.1  # 10% resolution
+    efficiency = 0.9  # 90% efficiency
+    
+    # Test with detection
+    np.random.seed(42)  # For reproducibility
+    E_detected = apply_detector_response(energy, resolution, efficiency)
+    assert isinstance(E_detected, (float, type(None)))
+    
+    if E_detected is not None:
+        assert E_detected >= 0  # Measured energy should be non-negative
+        
+    # Test with no detection (force efficiency = 0)
+    E_not_detected = apply_detector_response(energy, resolution, 0.0)
+    assert E_not_detected is None
