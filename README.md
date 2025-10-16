@@ -22,49 +22,37 @@ A sophisticated Monte Carlo simulation for detecting dark matter particles (WIMP
 
 ## 🚀 Getting Started
 
-Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
-
-### Prerequisites
-
-You need to have [Node.js](https://nodejs.org/) (which includes npm) installed on your computer to use common development tools.
-
--   Node.js (v16 or later recommended)
--   npm (v8 or later) or yarn
-
-### Installation
+This is a React based application.
 
 1.  **Clone the repository:**
-    ```sh
+    ```bash
     git clone https://github.com/XIVIX-Official/dark-matter-detection.git
+    ```
+
+2.  **Navigate to the directory:**
+    ```bash
     cd dark-matter-detection
     ```
 
-2.  **Install dependencies:**
-    This project uses an `importmap` for dependencies like React and Recharts, so there are no external packages to install with npm for the core functionality. The development setup assumes you have a local server to serve the static files.
-
-3.  **Run the application:**
-
-    **Option A: Using `live-server`**
-    If you don't have `live-server`, install it globally:
-    ```sh
-    npm install -g live-server
+3.  **Install dependencies:**
+    ```bash
+    npm install
     ```
-    Then, run it from the project's root directory:
-    ```sh
-    live-server
-    ```
-    This will automatically open the application in your default web browser.
 
-    **Option B: Using Python's HTTP Server**
-    If you have Python installed, navigate to the project's root directory and run:
-    ```sh
-    # For Python 3
-    python -m http.server
-
-    # For Python 2
-    python -m SimpleHTTPServer
+4.  **Start the development server:**
+    ```bash
+    npm run dev
     ```
-    Then, open your browser and navigate to `http://localhost:8000`.
+
+5.  **Open the application:**
+    - The development server will provide a local URL (typically `http://localhost:3000`)
+    - Open this URL in your web browser
+    
+6.  **For production build:**
+    ```bash
+    npm run build
+    npm run preview    # To preview the production build
+    ```
 
 ## 🖥️ How to Use
 
