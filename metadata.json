@@ -1,0 +1,5 @@
+{
+  "name": "Dark Matter Detection Simulation",
+  "description": "A sophisticated Monte Carlo simulation for detecting dark matter particles based on particle physics interactions. Features a modern web-based UI with a glassmorphic dark theme, real-time analysis, and data export capabilities.",
+  "requestFramePermissions": []
+}
