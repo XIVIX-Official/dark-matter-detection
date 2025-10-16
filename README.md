@@ -35,16 +35,16 @@ You need to have [Node.js](https://nodejs.org/) (which includes npm) installed o
 
 1.  **Clone the repository:**
     ```sh
-    git clone https://github.com/your-username/dark-matter-simulation.git
+    git clone https://github.com/XIVIX-Official/dark-matter-simulation.git
     cd dark-matter-simulation
     ```
 
 2.  **Install dependencies:**
-    This project uses an `importmap` for dependencies like React and Recharts, so there are no external packages to install with npm for the core functionality. The development setup assumes you have a local server to serve the static files. A simple way is to use `live-server` or Python's built-in HTTP server.
+    This project uses an `importmap` for dependencies like React and Recharts, so there are no external packages to install with npm for the core functionality. The development setup assumes you have a local server to serve the static files.
 
 3.  **Run the application:**
 
-    **Option A: Using `live-server` (recommended)**
+    **Option A: Using `live-server`**
     If you don't have `live-server`, install it globally:
     ```sh
     npm install -g live-server
@@ -86,3 +86,7 @@ This project is licensed under the MIT License.
 ---
 
 *This simulation is for educational and demonstrative purposes only and does not represent a physically accurate model.*
+
+---
+
+**Powered by XIVIX**
