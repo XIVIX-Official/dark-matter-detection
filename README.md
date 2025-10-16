@@ -2,6 +2,10 @@
 
 A sophisticated Monte Carlo simulation for detecting dark matter particles (WIMPs) based on particle physics interactions. This project features a modern, real-time, web-based UI built with React, TypeScript, and Tailwind CSS.
 
+![Dark Matter Detection Logo](./icons/icon-512x512.png)
+
+---
+
 ## 🌌 Features
 
 -   **Advanced Physics Engine**: Simulates WIMP (Weakly Interacting Massive Particle) interactions within different detector materials.
