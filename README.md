@@ -1,4 +1,4 @@
-# Dark Matter Detection Simulation
+# Dark Matter Detection
 
 A sophisticated Monte Carlo simulation for detecting dark matter particles (WIMPs) based on particle physics interactions. This project features a modern, real-time, web-based UI built with React, TypeScript, and Tailwind CSS.
 
@@ -35,8 +35,8 @@ You need to have [Node.js](https://nodejs.org/) (which includes npm) installed o
 
 1.  **Clone the repository:**
     ```sh
-    git clone https://github.com/XIVIX-Official/dark-matter-simulation.git
-    cd dark-matter-simulation
+    git clone https://github.com/XIVIX-Official/dark-matter-detection.git
+    cd dark-matter-detection
     ```
 
 2.  **Install dependencies:**
